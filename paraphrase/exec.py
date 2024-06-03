@@ -23,6 +23,11 @@ class Pegasus:
         self.num_return_sequences = num_return_sequences
     def set_num_beams(self, num_beams):
         self.num_beams = num_beams
+
+    def is_beams_less_than_sequences(self):
+        if self.num_beams < self.num_return_sequences:
+            return True
+        return False
     def get_response(self, text):
         self.all_response.append(f"{text}\n↓====================↓")
         batch = self.tokenizer([text],truncation=True,padding='longest',max_length=60, return_tensors="pt").to(self.device)
@@ -54,10 +59,14 @@ class Pegasus:
         self.clean()
         self.set_num_beams(num_beams)
         self.set_num_return_sequences(num_return_sequences)
+        if self.is_beams_less_than_sequences():
+            return '错误: num_beams 参数必须大于或者等于 num_return_sequences', '错误: num_beams 参数必须大于或者等于 num_return_sequences'
         logger.debug(f'num_beams: {num_beams}, num_return_sequences: {num_return_sequences}')
         self.set_text(text)
         self.make_sentences()
-        logger.debug(' '.join(self.response))
+        logger.debug(self.response)
+        if self.response == ['\n']:
+            return '错误: 无法正常分句, 请检查输入是否为英文句子, 查看注意内容第一点', '错误: 无法正常分句, 请检查输入是否为英文句子, 查看注意内容第一点'
         return ' '.join(self.response), '\n'.join(self.all_response)
 
     def clean(self):
