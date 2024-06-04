@@ -30,9 +30,10 @@ if __name__ == '__main__':
             gr.Textbox(label="重写结果", placeholder="这里查看最终的输出结果"), 
             gr.Textbox(label="单句结果", placeholder="这里查看单句所有输出结果")
             ],
+            
         
         submit_btn="提交",
         clear_btn="清空",
-        allow_flagging = "never"
+        allow_flagging = "never",
         )
-    demo.launch(server_port=7880)
+    demo.launch(server_port=7880, auth=("admin", "12345"))
