@@ -35,4 +35,4 @@ if __name__ == '__main__':
         clear_btn="清空",
         allow_flagging = "never"
         )
-    demo.launch()
+    demo.launch(server_port=7880)
