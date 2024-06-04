@@ -7,8 +7,9 @@ class Pegasus:
     def __init__(self, num_return_sequences, num_beams):
         self.model_name = 'tuner007/pegasus_paraphrase'
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        logger.debug("Use device: {}".format(self.device))
         try:
-            logger.debug("try to load models from local")
+            logger.debug("Try to load models from local")
             self.tokenizer = PegasusTokenizer.from_pretrained("./models/")
             self.model = PegasusForConditionalGeneration.from_pretrained("./models/").to(self.device)
         except BaseException:
