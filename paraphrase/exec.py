@@ -8,12 +8,13 @@ class Pegasus:
         self.model_name = 'tuner007/pegasus_paraphrase'
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         try:
-            self.tokenizer = PegasusTokenizer.from_pretrained(self.model_name)
-            self.model = PegasusForConditionalGeneration.from_pretrained(self.model_name).to(self.device)
-        except BaseException:
-            logger.debug("load models from local")
+            logger.debug("try to load models from local")
             self.tokenizer = PegasusTokenizer.from_pretrained("./models/")
             self.model = PegasusForConditionalGeneration.from_pretrained("./models/").to(self.device)
+        except BaseException:
+            logger.debug("try to load models from huggingface cache")
+            self.tokenizer = PegasusTokenizer.from_pretrained(self.model_name)
+            self.model = PegasusForConditionalGeneration.from_pretrained(self.model_name).to(self.device)
         self.num_return_sequences = num_return_sequences
         self.num_beams = num_beams
         self.text = ''
