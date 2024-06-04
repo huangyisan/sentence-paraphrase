@@ -24,7 +24,7 @@ if __name__ == '__main__':
         fn=P.exec, 
         inputs=[
             gr.Textbox(label="待重写内容", placeholder="输入或粘贴您要重写的内容, 并按提交按钮"), 
-            gr.Slider(value=5, minimum=2, maximum=20, step=1, label="num_beams"),
+            gr.Slider(value=10, minimum=2, maximum=20, step=1, label="num_beams"),
             gr.Slider(value=4, minimum=2, maximum=20, step=1, label="num_return_sequences")], 
         outputs=[
             gr.Textbox(label="重写结果", placeholder="这里查看最终的输出结果"), 
