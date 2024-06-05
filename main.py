@@ -1,12 +1,21 @@
 import gradio as gr
 from paraphrase.exec import Pegasus
 from loguru import logger
- 
+import uuid
 
+def generate_trace_id():
+    return str(uuid.uuid4())
+
+logger.add("log/paraphrase.log", format="{time} | {level} | {message} | trace_id={extra}", rotation="1 MB", level="DEBUG")
+ 
 if __name__ == '__main__':
+    P = Pegasus()
     def paraphrase(text, num_beams, num_return_sequences):
-        P = Pegasus()
-        return P.exec(text=text, num_beams=num_beams, num_return_sequences=num_return_sequences)
+        trace_id = generate_trace_id()
+        with logger.contextualize(trace_id=trace_id):
+            logger.info(f"Origin text: {text}")
+            return P.exec(text, num_beams, num_return_sequences)
+        
     demo = gr.Interface(
         description='''
         ```shell
@@ -31,7 +40,8 @@ if __name__ == '__main__':
             gr.Slider(value=4, minimum=2, maximum=20, step=1, label="num_return_sequences")], 
         outputs=[
             gr.Textbox(label="重写结果", placeholder="这里查看最终的输出结果"), 
-            gr.Textbox(label="单句结果", placeholder="这里查看单句所有输出结果")
+            gr.Textbox(label="单句结果", placeholder="这里查看单句所有输出结果"),
+            gr.List(label="候选结果", elem_classes="candidate-list"),
             ],
             
         

@@ -12,10 +12,12 @@ class Pegasus:
             logger.debug("Try to load models from local")
             self.tokenizer = PegasusTokenizer.from_pretrained("./models/")
             self.model = PegasusForConditionalGeneration.from_pretrained("./models/").to(self.device)
+            logger.debug("Load models from local")
         except BaseException:
             logger.debug("try to load models from huggingface cache")
             self.tokenizer = PegasusTokenizer.from_pretrained(self.model_name)
             self.model = PegasusForConditionalGeneration.from_pretrained(self.model_name).to(self.device)
+            logger.debug("Load models from huggingface cache")
         self.num_return_sequences = 1
         self.num_beams = 1
         self.text = ''
@@ -70,7 +72,7 @@ class Pegasus:
         logger.debug(f'num_beams: {num_beams}, num_return_sequences: {num_return_sequences}')
         self.set_text(text)
         self.make_sentences()
-        logger.debug(self.response)
+        logger.info(f"result: {self.response}")
         if self.response == ['\n']:
             return '错误: 无法正常分句, 请检查输入是否为英文句子, 查看注意内容第一点', '错误: 无法正常分句, 请检查输入是否为英文句子, 查看注意内容第一点'
         return ' '.join(self.response), '\n'.join(self.all_response)
