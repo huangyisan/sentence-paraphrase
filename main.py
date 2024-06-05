@@ -1,9 +1,12 @@
 import gradio as gr
 from paraphrase.exec import Pegasus
+from loguru import logger
  
 
 if __name__ == '__main__':
-    P = Pegasus(num_return_sequences=2, num_beams=2)
+    def paraphrase(text, num_beams, num_return_sequences):
+        P = Pegasus()
+        return P.exec(text=text, num_beams=num_beams, num_return_sequences=num_return_sequences)
     demo = gr.Interface(
         description='''
         ```shell
@@ -21,7 +24,7 @@ if __name__ == '__main__':
 
         ```
         ''',
-        fn=P.exec, 
+        fn=paraphrase, 
         inputs=[
             gr.Textbox(label="待重写内容", placeholder="输入或粘贴您要重写的内容, 并按提交按钮"), 
             gr.Slider(value=10, minimum=2, maximum=20, step=1, label="num_beams"),
@@ -36,4 +39,4 @@ if __name__ == '__main__':
         clear_btn="清空",
         allow_flagging = "never",
         )
-    demo.launch(server_port=7880, auth=("admin", "12345"))
+    demo.launch(server_port=7880)
