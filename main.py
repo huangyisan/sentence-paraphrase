@@ -41,7 +41,6 @@ if __name__ == '__main__':
         outputs=[
             gr.Textbox(label="重写结果", placeholder="这里查看最终的输出结果"), 
             gr.Textbox(label="单句结果", placeholder="这里查看单句所有输出结果"),
-            gr.List(label="候选结果", elem_classes="candidate-list"),
             ],
             
         
