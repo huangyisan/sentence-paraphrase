@@ -75,7 +75,8 @@ class Pegasus:
         logger.info(f"result: {self.response}")
         if self.response == ['\n']:
             return '错误: 无法正常分句, 请检查输入是否为英文句子, 查看注意内容第一点', '错误: 无法正常分句, 请检查输入是否为英文句子, 查看注意内容第一点'
-        return ' '.join(self.response), '\n'.join(self.all_response)
+        return ' '.join(self.response)
+        # return ' '.join(self.response), '\n'.join(self.all_response)
 
     def clean(self):
         self.text = ''

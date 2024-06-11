@@ -3,6 +3,8 @@ from paraphrase.exec import Pegasus
 from loguru import logger
 import uuid
 
+print(gr.__version__)
+
 def generate_trace_id():
     return str(uuid.uuid4())
 
