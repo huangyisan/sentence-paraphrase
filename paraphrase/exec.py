@@ -22,7 +22,6 @@ class Pegasus:
         self.num_beams = 1
         self.text = ''
         self.all_response = []
-        self.response = []
 
     def set_text(self, text):
         self.text = text
@@ -37,15 +36,13 @@ class Pegasus:
             return True
         return False
     def get_response(self, text):
-        self.all_response.append(f"{text}\n↓====================↓")
         batch = self.tokenizer([text],truncation=True,padding='longest',max_length=60, return_tensors="pt").to(self.device)
         translated = self.model.generate(**batch,max_length=60,num_beams=self.num_beams, num_return_sequences=self.num_return_sequences, temperature=1.5)
         tgt_text = self.tokenizer.batch_decode(translated, skip_special_tokens=True)
         for i, s in enumerate(tgt_text,1):
             logger.debug(f'translate {i}: {s}')
-        self.all_response.extend(tgt_text)
-        self.all_response.append('↑====================↑\n')
-        self.response.append(max(tgt_text, key=len))
+        self.all_response.append(tgt_text)
+        
 
     def paragraph_split(self):
         paragraphs = re.split(r'\n\s*\n', self.text.strip())
@@ -61,7 +58,6 @@ class Pegasus:
         for paragraph in self.paragraph_split():
             for s in self.eng_split(paragraph):
                 self.get_response(s)
-            self.response.append('\n')
     
     def exec(self, text, num_beams, num_return_sequences):
         self.clean()
@@ -72,13 +68,9 @@ class Pegasus:
         logger.debug(f'num_beams: {num_beams}, num_return_sequences: {num_return_sequences}')
         self.set_text(text)
         self.make_sentences()
-        logger.info(f"result: {self.response}")
-        if self.response == ['\n']:
-            return '错误: 无法正常分句, 请检查输入是否为英文句子, 查看注意内容第一点', '错误: 无法正常分句, 请检查输入是否为英文句子, 查看注意内容第一点'
-        return ' '.join(self.response)
-        # return ' '.join(self.response), '\n'.join(self.all_response)
-
+        logger.info(f"result: {self.all_response}")
+        if self.all_response:
+            return [" ".join(parts) for parts in zip(*self.all_response)]
     def clean(self):
         self.text = ''
-        self.response = []
         self.all_response = []
