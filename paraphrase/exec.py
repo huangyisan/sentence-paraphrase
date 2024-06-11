@@ -39,10 +39,9 @@ class Pegasus:
         batch = self.tokenizer([text],truncation=True,padding='longest',max_length=60, return_tensors="pt").to(self.device)
         translated = self.model.generate(**batch,max_length=60,num_beams=self.num_beams, num_return_sequences=self.num_return_sequences, temperature=1.5)
         tgt_text = self.tokenizer.batch_decode(translated, skip_special_tokens=True)
+        self.all_response.append(tgt_text)
         for i, s in enumerate(tgt_text,1):
             logger.debug(f'translate {i}: {s}')
-        self.all_response.append(tgt_text)
-        
 
     def paragraph_split(self):
         paragraphs = re.split(r'\n\s*\n', self.text.strip())
@@ -56,9 +55,17 @@ class Pegasus:
 
     def make_sentences(self):
         for paragraph in self.paragraph_split():
+            logger.info(f'Paragraph: {paragraph}')
             for s in self.eng_split(paragraph):
                 self.get_response(s)
-    
+            logger.warning("current graph ")
+            logger.warning(f"paragraph end : {self.all_response}")
+            last_sublist = self.all_response[-1]
+            # 每段添加换行符
+            for i in range(len(last_sublist)):
+                last_sublist[i] = last_sublist[i] + '\n'
+            logger.warning(f"paragraph end : {self.all_response}")
+            
     def exec(self, text, num_beams, num_return_sequences):
         self.clean()
         self.set_num_beams(num_beams)
