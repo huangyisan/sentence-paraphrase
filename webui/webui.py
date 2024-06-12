@@ -47,7 +47,7 @@ def create_webui():
                     submit_button = gr.Button("提交内容")
 
             with gr.Column():
-                @gr.render(inputs=[num_return_sequences, num_beams], triggers=[num_return_sequences.change])
+                @gr.render(inputs=[num_return_sequences, num_beams])
                 # 第二个参数占位, 否则num_beams Slider不可拖动.
                 def render_tag_by_num_return_sequences(count, _):
                     # num_beams = gr.Slider(value=4, minimum=2, maximum=20, step=1, label="num_beams", info="该数值过低可能会导致生成的结果与原文过于相似，而数值过高则可能导致生成的结果偏离原文，出现不可靠的输出。")
