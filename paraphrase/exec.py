@@ -71,7 +71,7 @@ class Pegasus:
         self.set_num_beams(num_beams)
         self.set_num_return_sequences(num_return_sequences)
         if self.is_beams_less_than_sequences():
-            return '错误: num_beams 参数必须大于或者等于 num_return_sequences', '错误: num_beams 参数必须大于或者等于 num_return_sequences'
+            return ['错误: num_beams 参数必须大于或者等于 num_return_sequences'] + [""]*19
         logger.debug(f'num_beams: {num_beams}, num_return_sequences: {num_return_sequences}')
         self.set_text(text)
         self.make_sentences()
