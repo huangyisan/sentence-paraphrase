@@ -75,9 +75,12 @@ class Pegasus:
         logger.debug(f'num_beams: {num_beams}, num_return_sequences: {num_return_sequences}')
         self.set_text(text)
         self.make_sentences()
-        logger.info(f"result: {self.all_response}")
         if self.all_response:
-            return [" ".join(parts) for parts in zip(*self.all_response)]
+            longest_response = []
+            for sublist in self.all_response:
+                longest_response.append(max(sublist, key=len))
+            logger.info(f"result: max -> {longest_response}\n sep: {self.all_response}")
+            return [" ".join(longest_response)] + [" ".join(parts) for parts in zip(*self.all_response)]
     def clean(self):
         self.text = ''
         self.all_response = []

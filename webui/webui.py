@@ -52,8 +52,10 @@ def create_webui():
                 def render_tag_by_num_return_sequences(count, _):
                     # num_beams = gr.Slider(value=4, minimum=2, maximum=20, step=1, label="num_beams", info="该数值过低可能会导致生成的结果与原文过于相似，而数值过高则可能导致生成的结果偏离原文，出现不可靠的输出。")
                     boxes = []
-                    for i in range(count):
-                        with gr.Tab(label=f"{i+1}句选择"):
+                    for i in range(0, count + 1):
+                        if i == 0:
+                            i = "最长"
+                        with gr.Tab(label=f"{i}句选择"):
                             # gr.Markdown(f"{i+1}句选择")
                             box = gr.Textbox(key=i, label="重写结果", placeholder="这里查看最终的输出结果", lines=7, show_copy_button=True)
                             boxes.append(box)
